@@ -1,7 +1,8 @@
 from django.contrib import admin
-import models
+from .models import Category, MenuItem, Order, OrderItem
 
-admin.site.register(models.Category)
-admin.site.register(models.MenuItem)
-admin.site.register(models.Order)
-admin.site.register(models.OrderItem)
+
+admin.site.register(Category)
+admin.site.register(MenuItem)
+admin.site.register(Order)
+admin.site.register(OrderItem)
