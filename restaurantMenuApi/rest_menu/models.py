@@ -39,3 +39,20 @@ class OrderItem (models.Model):
     
     def __str__(self):
         return f"{self.menu_item.name} x{self.quantity}"   
+
+
+class CartItem(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    menu_item = models.ForeignKey(MenuItem, on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField(default=1)
+
+    def __str__(self):
+        return f"{self.menu_item.name} (User: {self.user.username})"
+
+
+class Cart(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    items = models.ManyToManyField(CartItem, blank=True)
+
+    def __str__(self):
+        return f"Cart (User: {self.user.username})"
