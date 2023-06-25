@@ -67,7 +67,7 @@ class ManagerUsersList(generics.ListCreateAPIView):
             managers = Group.objects.get(name="manager")
             managers.user_set.add(user)
             return Response(status=status.HTTP_201_CREATED)
-        return Response({"msg": "error"}, status.HTTP_400_BAD_REQUEST)
+        return Response({"message": "User Not Found"}, status.HTTP_400_BAD_REQUEST)
     
 class RemoveUserFromManagerGroup(generics.DestroyAPIView):
     permission_classes = [ManagerOnlyPermission]
@@ -79,5 +79,34 @@ class RemoveUserFromManagerGroup(generics.DestroyAPIView):
             return Response(status=status.HTTP_404_NOT_FOUND)
         managers = Group.objects.get(name="manager")
         managers.user_set.remove(user)
+        return Response(status=status.HTTP_200_OK)
+    
+
+class DeliveryUsersList(generics.ListCreateAPIView):
+    serializer_class = UserSerializer
+    permission_classes = [ManagerOnlyPermission]
+    
+    def get_queryset(self):
+        return User.objects.filter(groups__name="delivery").all()
+    
+    def create(self, request, *args, **kwargs):
+        username = request.data.get("username")
+        if username:
+            user = get_object_or_404(User, username=username)
+            delivery = Group.objects.get(name="delivery")
+            delivery.user_set.add(user)
+            return Response(status=status.HTTP_201_CREATED)
+        return Response({"message": "User Not Found"}, status.HTTP_400_BAD_REQUEST)
+    
+class RemoveUserFromDeliveryGroup(generics.DestroyAPIView):
+    permission_classes = [ManagerOnlyPermission]
+    def destroy(self, request, *args, **kwargs):
+        user_id = self.kwargs.get("user_id")
+        try:
+            user = User.objects.get(pk=user_id)
+        except User.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        delivery = Group.objects.get(name="delivery")
+        delivery.user_set.remove(user)
         return Response(status=status.HTTP_200_OK)
     
