@@ -43,9 +43,11 @@ class CartItem(models.Model):
 
 class Order(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    delivery_crew = models.ForeignKey(User, on_delete=models.SET_NULL, related_name="delivery_crew", null=True)
+    delivery_crew = models.ForeignKey(
+        User, on_delete=models.SET_NULL, related_name="delivery_crew", null=True
+    )
     created_at = models.DateTimeField(auto_now_add=True)
-    deliverd_at = models.DateTimeField(null=True, blank=True)
+    delivered_at = models.DateTimeField(null=True, blank=True)
     status = models.BooleanField(default=False)
     total = models.PositiveIntegerField(default=0)
 
@@ -54,12 +56,13 @@ class Order(models.Model):
 
 
 class OrderItem(models.Model):
-    order = models.ForeignKey(Order, on_delete=models.CASCADE)
+    order = models.ForeignKey(
+        Order, on_delete=models.CASCADE, related_name="order_items"
+    )
     menu_item = models.ForeignKey(MenuItem, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(default=1)
     unit_price = models.PositiveIntegerField(null=True)
     total_price = models.PositiveIntegerField(null=True)
-    
+
     def __str__(self):
         return f"{self.menu_item.name} x{self.quantity}"
-

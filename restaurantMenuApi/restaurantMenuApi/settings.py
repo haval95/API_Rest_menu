@@ -146,4 +146,4 @@ DJOSER = {
     # "LOGIN_FIELD": "email"
 }
 
-SIMPLE_JWT = {"ACCESS_TOKEN_LIFETIME": timedelta(minutes=15)}
+SIMPLE_JWT = {"ACCESS_TOKEN_LIFETIME": timedelta(days=15)}
