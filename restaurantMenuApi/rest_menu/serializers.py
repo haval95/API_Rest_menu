@@ -38,7 +38,14 @@ class CartItemSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CartItem
-        fields = ["id", "menu_item", "quantity", "unit_price", "menu_item_id", "total_price"]
+        fields = [
+            "id",
+            "menu_item",
+            "quantity",
+            "unit_price",
+            "menu_item_id",
+            "total_price",
+        ]
 
     def create(self, validated_data):
         # Get the menu_item and quantity from the validated data

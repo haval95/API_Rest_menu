@@ -6,7 +6,7 @@ from .serializers import (
     CategorySerializer,
     UserSerializer,
     CartItemSerializer,
-    CartSerializer
+    CartSerializer,
 )
 from .permissions import ManagerOnlyPermission, CustomerOnlyPermission
 from django.contrib.auth.models import User, Group
@@ -63,13 +63,14 @@ class CartItemView(generics.ListCreateAPIView):
     queryset = CartItem.objects.all()
     serializer_class = CartItemSerializer
     permission_classes = [CustomerOnlyPermission]
-    
-    
+
+
 class DeleteSingleCartItemView(generics.DestroyAPIView):
     queryset = CartItem.objects.all()
     serializer_class = CartItemSerializer
     permission_classes = [CustomerOnlyPermission]
-    
+
+
 class DeleteCartView(generics.DestroyAPIView):
     serializer_class = CartSerializer
     permission_classes = [CustomerOnlyPermission]
@@ -79,7 +80,6 @@ class DeleteCartView(generics.DestroyAPIView):
         user = self.request.user
         cart = Cart.objects.get(user=user)
         return cart
-    
 
 
 class ManagerUsersList(generics.ListCreateAPIView):
