@@ -10,8 +10,6 @@ from .serializers import (
 )
 from .permissions import ManagerOnlyPermission, CustomerOnlyPermission
 from django.contrib.auth.models import User, Group
-from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
 
 
