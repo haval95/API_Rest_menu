@@ -15,12 +15,16 @@ from django.contrib.auth.models import User, Group
 from rest_framework.response import Response
 from django.utils import timezone
 from rest_framework.throttling import AnonRateThrottle, UserRateThrottle
+from .filters import MenuItemsFilter 
 
 class MenuItemView(generics.ListCreateAPIView):
     queryset = MenuItem.objects.select_related("category").all()
     serializer_class = MenuItemSerializer
     throttle_classes = [AnonRateThrottle, UserRateThrottle]
 
+    filterset_class = MenuItemsFilter
+    ordering_fields = ['price', 'name']
+    
     def get_permissions(self):
         permission_classes = []
         if self.request.method != "GET":
@@ -90,7 +94,7 @@ class DeleteCartView(generics.DestroyAPIView):
 class OrderView(generics.ListCreateAPIView):
     serializer_class = OrderSerializer
     permission_classes = [permissions.IsAuthenticated]
-    
+    ordering_fields = ['created_at', 'status']
     def get_throttles(self):
         if self.request.method == "POST":
             throttle_classes = [AnonRateThrottle, UserRateThrottle]
@@ -265,3 +269,7 @@ class RemoveUserFromDeliveryGroup(generics.DestroyAPIView):
         delivery = Group.objects.get(name="delivery")
         delivery.user_set.remove(user)
         return Response(status=status.HTTP_200_OK)
+
+
+
+
