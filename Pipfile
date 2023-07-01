@@ -10,6 +10,7 @@ pillow = "*"
 djoser = "*"
 djangorestframework-simplejwt = "*"
 black = "*"
+django-filter = "*"
 
 [dev-packages]
 
