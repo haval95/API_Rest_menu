@@ -139,6 +139,10 @@ REST_FRAMEWORK = {
         "rest_framework.authentication.TokenAuthentication",
         "rest_framework.authentication.SessionAuthentication",
     ),
+    'DEFAULT_THROTTLE_RATES': {
+        'anon': '80/hour',
+        "user": "100/hour",
+        },
 }
 
 DJOSER = {
@@ -146,4 +150,4 @@ DJOSER = {
     # "LOGIN_FIELD": "email"
 }
 
-SIMPLE_JWT = {"ACCESS_TOKEN_LIFETIME": timedelta(minutes=15)}
+SIMPLE_JWT = {"ACCESS_TOKEN_LIFETIME": timedelta(days=15)}
