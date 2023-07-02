@@ -15,7 +15,7 @@ class MenuItemSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = MenuItem
-        fields = ["name", "price", "ingridiants", "image", "category", "category_id"]
+        fields = ["name", "price", "featured", "ingridiants", "image", "category", "category_id"]
 
 
 class SimpleMenuItemSerializer(serializers.ModelSerializer):
