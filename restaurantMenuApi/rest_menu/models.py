@@ -14,6 +14,7 @@ class MenuItem(models.Model):
     price = models.PositiveIntegerField()
     ingridiants = models.CharField(max_length=500)
     image = models.ImageField(upload_to="images", null=True)
+    featured = models.BooleanField(default=True)
     category = models.ForeignKey(
         Category, related_name="category", on_delete=models.PROTECT, default=None
     )
