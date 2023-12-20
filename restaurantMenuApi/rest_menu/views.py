@@ -15,7 +15,8 @@ from django.contrib.auth.models import User, Group
 from rest_framework.response import Response
 from django.utils import timezone
 from rest_framework.throttling import AnonRateThrottle, UserRateThrottle
-from .filters import MenuItemsFilter 
+from .filters import MenuItemsFilter
+
 
 class MenuItemView(generics.ListCreateAPIView):
     queryset = MenuItem.objects.select_related("category").all()
@@ -23,8 +24,8 @@ class MenuItemView(generics.ListCreateAPIView):
     throttle_classes = [AnonRateThrottle, UserRateThrottle]
 
     filterset_class = MenuItemsFilter
-    ordering_fields = ['price', 'name']
-    
+    ordering_fields = ["price", "name"]
+
     def get_permissions(self):
         permission_classes = []
         if self.request.method != "GET":
@@ -36,6 +37,7 @@ class SingleMenuItemView(generics.RetrieveUpdateAPIView, generics.DestroyAPIView
     queryset = MenuItem.objects.select_related("category").all()
     serializer_class = MenuItemSerializer
     throttle_classes = [AnonRateThrottle, UserRateThrottle]
+
     def get_permissions(self):
         permission_classes = []
         if self.request.method != "GET":
@@ -47,6 +49,7 @@ class CategoryView(generics.ListCreateAPIView):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
     throttle_classes = [AnonRateThrottle, UserRateThrottle]
+
     def get_permissions(self):
         permission_classes = []
         if self.request.method != "GET":
@@ -58,6 +61,7 @@ class SingleCategoryView(generics.RetrieveUpdateAPIView, generics.DestroyAPIView
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
     throttle_classes = [AnonRateThrottle, UserRateThrottle]
+
     def get_permissions(self):
         permission_classes = []
         if self.request.method != "GET":
@@ -94,13 +98,14 @@ class DeleteCartView(generics.DestroyAPIView):
 class OrderView(generics.ListCreateAPIView):
     serializer_class = OrderSerializer
     permission_classes = [permissions.IsAuthenticated]
-    ordering_fields = ['created_at', 'status']
+    ordering_fields = ["created_at", "status"]
+
     def get_throttles(self):
         if self.request.method == "POST":
             throttle_classes = [AnonRateThrottle, UserRateThrottle]
         else:
             throttle_classes = []  # No throttling for other methods
-        return [throttle() for throttle in throttle_classes] 
+        return [throttle() for throttle in throttle_classes]
 
     def get_queryset(self):
         user = self.request.user
@@ -109,13 +114,13 @@ class OrderView(generics.ListCreateAPIView):
         elif user.groups.filter(name="manager").exists():
             queryset = Order.objects.all()
         elif user.groups.filter(name="delivery").exists():
-            queryset = Order.objects.filter(delivery_crew=user)  
+            queryset = Order.objects.filter(delivery_crew=user)
 
         pending = self.request.query_params.get("pending")
         if pending:
             queryset = queryset.filter(status=pending)
         return queryset
-        
+
     def create(self, request, *args, **kwargs):
         # Get the current user
         user = self.request.user
@@ -123,8 +128,9 @@ class OrderView(generics.ListCreateAPIView):
         try:
             cart = Cart.objects.get(user=user)
         except Cart.DoesNotExist:
-            return Response({"message": "Cart is empty"}, status=status.HTTP_404_NOT_FOUND)
-       
+            return Response(
+                {"message": "Cart is empty"}, status=status.HTTP_404_NOT_FOUND
+            )
 
         # Create the order
         order = Order.objects.create(user=user)
@@ -162,6 +168,7 @@ class SingleOrderView(generics.RetrieveUpdateAPIView, generics.DestroyAPIView):
     serializer_class = OrderSerializer
     permission_classes = [permissions.IsAuthenticated]
     throttle_classes = [AnonRateThrottle, UserRateThrottle]
+
     def get_queryset(self):
         user = self.request.user
         if user.groups.filter(name="customer").exists():
@@ -171,7 +178,7 @@ class SingleOrderView(generics.RetrieveUpdateAPIView, generics.DestroyAPIView):
         elif user.groups.filter(name="delivery").exists():
             queryset = Order.objects.filter(delivery_crew=user)
         return queryset
-    
+
     def put(self, request, *args, **kwargs):
         # Allow PUT method for managers
         user = self.request.user
@@ -198,21 +205,19 @@ class SingleOrderView(generics.RetrieveUpdateAPIView, generics.DestroyAPIView):
             return Response(serializer.data)
         else:
             return Response(status=status.HTTP_403_FORBIDDEN)
-    
+
     def delete(self, request, *args, **kwargs):
         user = self.request.user
         if user.groups.filter(name="manager").exists():
             return self.destroy(request, *args, **kwargs)
         else:
             return Response(status=status.HTTP_403_FORBIDDEN)
-   
-    
 
 
 class ManagerUsersList(generics.ListCreateAPIView):
     serializer_class = UserSerializer
     permission_classes = [ManagerOnlyPermission]
-    
+
     def get_queryset(self):
         return User.objects.filter(groups__name="manager").all()
 
@@ -269,7 +274,3 @@ class RemoveUserFromDeliveryGroup(generics.DestroyAPIView):
         delivery = Group.objects.get(name="delivery")
         delivery.user_set.remove(user)
         return Response(status=status.HTTP_200_OK)
-
-
-
-
