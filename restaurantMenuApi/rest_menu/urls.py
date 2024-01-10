@@ -16,9 +16,9 @@ from .views import (
 )
 
 urlpatterns = [
-    path("menu-items", MenuItemView.as_view()),
+    path("menu-items/", MenuItemView.as_view()),
     path("menu-items/<int:pk>", SingleMenuItemView.as_view()),
-    path("categories", CategoryView.as_view()),
+    path("categories/", CategoryView.as_view()),
     path("categories/<int:pk>", SingleCategoryView.as_view()),
     path("cart/menu-items", CartItemView.as_view()),
     path("cart/menu-items/<int:pk>", DeleteSingleCartItemView.as_view()),
