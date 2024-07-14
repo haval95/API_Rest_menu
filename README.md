@@ -1,4 +1,4 @@
-# Little Lemon Restaurant API
+#  Restaurant Menu API
 
 ## Introduction
 The Little Lemon Restaurant API provides access to various functionalities for interacting with the restaurant's menu, placing orders, and managing user roles. This API allows clients to develop web and mobile applications to enhance the restaurant's services. Below are the available endpoints:
